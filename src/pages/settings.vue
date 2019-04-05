@@ -42,7 +42,7 @@
 
                 <div class="color-picker">
                     <p>RGB:</p>
-                    <input type="number" max="255">
+                    <input type="number" min="0" max="255">
                     <input type="number">
                     <input type="number">
                     <div class="color-result">Color</div>
