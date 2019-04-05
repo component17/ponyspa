@@ -1,12 +1,12 @@
 <template>
     <div class="hello">
-        <div>
+        <div v-if="isEdited">
             <input type="text" placeholder="кол-во светодиодов" v-model="lamps">
             <button @click="deleteBlock">Удалить</button>
-            <input type="checkbox" v-model="isEdited"/>
         </div>
-        <div class="scene">
-            <canvas id="canvas"
+
+        <div class="scene" v-if="width">
+            <canvas ref="canvas"
                     :style="`border: 1px ${style.guideLine} solid`"
                     @mousemove="mouseMove"
                     @mousedown="mouseDown"
@@ -15,7 +15,8 @@
             ></canvas>
             <div v-for="(item, index) in this.blocks" :key="index"
                  :style="getStyle(item)"
-                 class="toolTips">{{item.name}}</div>
+                 class="toolTips">{{item.name}}
+            </div>
         </div>
         <div class="inputs">
             <div class="items" v-for="(item, index) in blocks" :key="index">
@@ -27,9 +28,18 @@
 </template>
 
 <script>
-    let rects = [];
     export default {
         name: 'HelloWorld',
+        props: {
+            isEdited: {
+                type: Boolean,
+                default: false
+            },
+            width: {
+                type: Number,
+                required: true
+            }
+        },
         watch: {
             lamps() {
                 this.mouseLeave();
@@ -37,50 +47,8 @@
                 this.blocks = []
             }
         },
-        mounted() {
-            (function () {
-                let lastTime = 0
-                let vendors = ['ms', 'moz', 'webkit', 'o']
-                for (let x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-                    window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
-                    window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame']
-                        || window[vendors[x] + 'CancelRequestAnimationFrame']
-                }
-
-                if (!window.requestAnimationFrame)
-                    window.requestAnimationFrame = (callback, element) => {
-                        let currTime = new Date().getTime()
-                        let timeToCall = Math.max(0, 16 - (currTime - lastTime))
-                        let id = window.setTimeout(function () {
-                                callback(currTime + timeToCall)
-                            },
-                            timeToCall)
-                        lastTime = currTime + timeToCall
-                        return id
-                    }
-
-                if (!window.cancelAnimationFrame)
-                    window.cancelAnimationFrame = function (id) {
-                        clearTimeout(id)
-                    }
-            }())
-
-            this.canvas = document.getElementById('canvas')
-            this.canvas.width = this.width
-            this.canvas.height = this.height
-            this.ctx = this.canvas.getContext('2d')
-
-            this.start()
-
-        },
-        computed: {
-            step() {
-                return ~~this.scene.width / this.lamps
-            }
-        },
         data() {
             return {
-                isEdited: true,
                 style: {
                     scene: {
                         padding: 0
@@ -100,10 +68,9 @@
                 scene: {
                     x: 10,
                     y: 10,
-                    width: 1000,
+                    width: this.width - 20,
                     height: 100
                 },
-                width: 1020,
                 height: 120,
                 ctx: null,
                 lamps: 50,
@@ -136,46 +103,87 @@
                 activeMarker: false,
             }
         },
+        mounted() {
+            (function () {
+                let lastTime = 0
+                let vendors = ['ms', 'moz', 'webkit', 'o']
+                for (let x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+                    window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
+                    window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame']
+                        || window[vendors[x] + 'CancelRequestAnimationFrame']
+                }
+
+                if (!window.requestAnimationFrame)
+                    window.requestAnimationFrame = (callback, element) => {
+                        let currTime = new Date().getTime()
+                        let timeToCall = Math.max(0, 16 - (currTime - lastTime))
+                        let id = window.setTimeout(function () {
+                                callback(currTime + timeToCall)
+                            },
+                            timeToCall)
+                        lastTime = currTime + timeToCall
+                        return id
+                    }
+
+                if (!window.cancelAnimationFrame)
+                    window.cancelAnimationFrame = function (id) {
+                        clearTimeout(id)
+                    }
+            }())
+
+            this.canvas = this.$refs.canvas;
+            this.canvas.width = this.width;
+            this.canvas.height = this.height;
+            this.ctx = this.canvas.getContext('2d');
+
+            this.start();
+
+        },
+        computed: {
+            step() {
+                return ~~this.scene.width / this.lamps
+            }
+        },
         methods: {
 
-            getStyle(item){
+            getStyle(item) {
                 return `
         position: absolute;
-        left: ${this.scene.x+item.x}px;
-        top: ${this.scene.y+item.y+item.height}px;
+        left: ${this.scene.x + item.x}px;
+        top: ${this.scene.y + item.y + item.height}px;
         width: ${item.width}px;
         font-size: 14px;`;
             },
 
-            save(index, block){
+            save(index, block) {
                 this.$set(this.blocks, +index, block);
             },
 
             loop() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-                this.drawScene()
-                this.drawGuideLines()
-                this.drawRect()
-                this.drawActive()
-                this.drawMarkers()
-                this.drawCreate()
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.drawScene();
+                this.drawGuideLines();
+                this.drawRect();
+                this.drawActive();
+                this.drawMarkers();
+                this.drawCreate();
 
                 window.requestAnimationFrame(this.loop)
             },
 
             mouseMove(e) {
-                this.mouse.old = {x: this.mouse.x, y: this.mouse.y}
-                this.mouse.old.cell = this.mouse.cell
+                this.mouse.old = {x: this.mouse.x, y: this.mouse.y};
+                this.mouse.old.cell = this.mouse.cell;
 
-                this.mouse.x = e.offsetX
-                this.mouse.y = e.offsetY
+                this.mouse.x = e.offsetX;
+                this.mouse.y = e.offsetY;
 
-                this.mouse.vx = this.mouse.x - this.mouse.old.x
-                this.mouse.vy = this.mouse.y - this.mouse.old.y
+                this.mouse.vx = this.mouse.x - this.mouse.old.x;
+                this.mouse.vy = this.mouse.y - this.mouse.old.y;
 
                 this.mouse.cell = ~~(this.mouse.x / this.step)
 
-                this.mouse.vc = this.mouse.cell - this.mouse.old.cell
+                this.mouse.vc = this.mouse.cell - this.mouse.old.cell;
 
                 this.resize()
                 this.dragMove()
@@ -389,7 +397,7 @@
                 for (let obj of this.blocks) {
                     this.ctx.fillStyle = obj.color
                     this.ctx.strokeStyle = obj.color
-                    this.ctx.fillRect(~~this.scene.x + obj.x + .5, ~~this.scene.y + obj.y + .5, obj.width-1, obj.height)
+                    this.ctx.fillRect(~~this.scene.x + obj.x + .5, ~~this.scene.y + obj.y + .5, obj.width - 1, obj.height)
 
                     // this.drawLabel(obj)
                 }
