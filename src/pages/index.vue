@@ -25,12 +25,10 @@
                             </div>
                         </router-link>
                     </div>
-                    <div class="canvas">
+                    <div class="canvas" ref="canvas">
 
-                        <selector></selector>
+                        <selector v-if="canvasBlockWidth" :width="canvasBlockWidth"></selector>
 
-                        Canvas
-                        <span>Без названия</span>
                     </div>
                 </div>
 
@@ -45,8 +43,7 @@
                         </router-link>
                     </div>
                     <div class="canvas">
-                        Canvas
-                        <span>Без названия</span>
+                        <!--<selector></selector>-->
                     </div>
                 </div>
 
@@ -61,8 +58,7 @@
                         </router-link>
                     </div>
                     <div class="canvas">
-                        Canvas
-                        <span>Без названия</span>
+                        <!--<selector></selector>-->
                     </div>
                 </div>
 
@@ -77,8 +73,7 @@
                         </router-link>
                     </div>
                     <div class="canvas">
-                        Canvas
-                        <span>Без названия</span>
+                        <!--<selector></selector>-->
                     </div>
                 </div>
             </div>
@@ -93,17 +88,6 @@
                         <span class="info__network-ip">{{ item.ip }}</span>
                     </div>
                 </div>
-
-                <div class="info__network">
-                    <img src="../../static/icons/light-bulb.svg" alt="" class="info__network-img">
-                    <div>
-                        <p class="info__network-name">abc</p>
-                        <span class="info__network-ip">192.16.1.11</span>
-                    </div>
-                </div>
-                <!--<ul>-->
-                    <!--<li v-for="(item, index) in networks">{{ item.name }}: {{ item.ip }}</li>-->
-                <!--</ul>-->
             </div>
         </div>
 
@@ -119,13 +103,22 @@
         },
         data(){
             return {
-                networks: []
+                networks: [],
+                canvasBlockWidth: 0
             }
         },
         created(){
             this.$axios.get('/network').then((response) => {
                 this.networks = response.data;
             })
+        },
+        mounted() {
+            setTimeout(() => {
+                this.canvasBlockWidth = this.$refs.canvas.offsetWidth
+            },100)
+        },
+        methods: {
+
         }
     }
 </script>
