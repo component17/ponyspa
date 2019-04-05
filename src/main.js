@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-
+import '@mdi/font/css/materialdesignicons.css'
 
 import('./assets/css/main.css');
 
@@ -22,6 +22,7 @@ new Vue({
     router,
     components: {App},
     template: '<App/>',
+    iconfont: 'mdi'
 })
 
 

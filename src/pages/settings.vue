@@ -6,7 +6,7 @@
             <div class="title title-settings">
                 <h1>Порт 1</h1>
                 <router-link to="/" class="close">
-                    <span>Закрыть х</span>
+                    <p>Закрыть <span class="mdi mdi-close"></span></p>
                 </router-link>
             </div>
             <p>Задайте количество пикселей (светодиодов) в ленте и выберите область, под которой будет размещена
@@ -20,9 +20,7 @@
 
                 <h3>Количество пикселей (светодиодов) в ленте:</h3>
 
-                <div class="pixel-count">
-                    <p>100</p>
-                </div>
+                <input class="pixel-count" type="number" value="100">
 
                 <p class="warning">ВНИМАНИЕ! При изменении количества пикселей в ленте все установленные
                     настройки будут удалены.</p>
@@ -33,6 +31,22 @@
                     </div>
                 </div>
 
+            <div class="pixel-settings" @click="changeActive" :class="{active : isActive}">
+                <div class="pixel-settings-name">
+                    <p>Название:</p>
+                    <input type="text">
+                </div>
+
+                <div class="color-picker">
+                    <p>RGB:</p>
+                    <input type="number">
+                    <input type="number">
+                    <input type="number">
+                    <div class="color-result"></div>
+                </div>
+
+                <span class="mdi mdi-delete"></span>
+            </div>
 
             <div class="pixel-settings">
                 <div class="pixel-settings-name">
@@ -42,15 +56,33 @@
 
                 <div class="color-picker">
                     <p>RGB:</p>
-                    <input type="number" min="0" max="255">
                     <input type="number">
                     <input type="number">
-                    <div class="color-result">Color</div>
+                    <input type="number">
+                    <div class="color-result"></div>
                 </div>
 
-                <p>Delete</p>
+                <span class="mdi mdi-delete"></span>
             </div>
+
+            <div class="pixel-settings">
+                <div class="pixel-settings-name">
+                    <p>Название:</p>
+                    <input type="text">
+                </div>
+
+                <div class="color-picker">
+                    <p>RGB:</p>
+                    <input type="number">
+                    <input type="number">
+                    <input type="number">
+                    <div class="color-result"></div>
+                </div>
+                <span class="mdi mdi-delete"></span>
             </div>
+
+            </div>
+
         </div>
 
 
@@ -60,16 +92,7 @@
 
 <script>
     export default {
-        data(){
-            return {
-                networks: []
-            }
-        },
-        created(){
-            this.$axios.get('/network').then((response) => {
-                this.networks = response.data;
-            })
-        }
+
     }
 </script>
 
