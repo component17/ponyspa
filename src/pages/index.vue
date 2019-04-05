@@ -26,6 +26,9 @@
                         </router-link>
                     </div>
                     <div class="canvas">
+
+                        <selector></selector>
+
                         Canvas
                         <span>Без названия</span>
                     </div>
@@ -111,6 +114,9 @@
 
 <script>
     export default {
+        components: {
+            selector: require('../components/canvas_selector').default
+        },
         data(){
             return {
                 networks: []
