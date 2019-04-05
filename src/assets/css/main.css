@@ -34,13 +34,13 @@ a {
 }
 
 #app{
-    width: 100%;
     height: 100%;
 }
 
 .content{
-    width: 100%;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
     background-color: #fbfcff;
 }
 
@@ -52,7 +52,16 @@ a {
 .header-block > .title{
     display: flex;
     flex-direction: row;
+    align-items: center;
+}
+.title-settings {
     justify-content: space-between;
+}
+
+.header-block > .settings{
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
 }
 
 .header-block > .title > .close{
@@ -70,6 +79,7 @@ a {
 
 .header-block > .title img{
     margin-right: 16px;
+    margin-bottom: 11px;
 }
 
 .header-block > .title > h1{

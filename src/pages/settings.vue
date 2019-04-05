@@ -3,7 +3,7 @@
 
         <div class="header-block">
 
-            <div class="title">
+            <div class="title title-settings">
                 <h1>Порт 1</h1>
                 <router-link to="/" class="close">
                     <span>Закрыть х</span>
@@ -42,9 +42,9 @@
 
                 <div class="color-picker">
                     <p>RGB:</p>
-                    <input type="text" min="0" max="255">
-                    <input type="text">
-                    <input type="text">
+                    <input type="number" max="255">
+                    <input type="number">
+                    <input type="number">
                     <div class="color-result">Color</div>
                 </div>
 
@@ -74,5 +74,9 @@
 </script>
 
 <style>
-
+    #app {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 2;
+    }
 </style>
