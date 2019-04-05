@@ -28,12 +28,10 @@
                             </div>
                         </router-link>
                     </div>
-                    <div class="canvas">
+                    <div class="canvas" ref="canvas">
 
-                        <selector></selector>
+                        <selector v-if="canvasBlockWidth" :width="canvasBlockWidth"></selector>
 
-                        Canvas
-                        <span>Без названия</span>
                     </div>
                 </div>
 
@@ -51,8 +49,7 @@
                         </router-link>
                     </div>
                     <div class="canvas">
-                        Canvas
-                        <span>Без названия</span>
+                        <!--<selector></selector>-->
                     </div>
                 </div>
 
@@ -70,8 +67,7 @@
                         </router-link>
                     </div>
                     <div class="canvas">
-                        Canvas
-                        <span>Без названия</span>
+                        <!--<selector></selector>-->
                     </div>
                 </div>
 
@@ -89,8 +85,7 @@
                         </router-link>
                     </div>
                     <div class="canvas">
-                        Canvas
-                        <span>Без названия</span>
+                        <!--<selector></selector>-->
                     </div>
                 </div>
             </div>
@@ -128,13 +123,22 @@
         },
         data(){
             return {
-                networks: []
+                networks: [],
+                canvasBlockWidth: 0
             }
         },
         created(){
             this.$axios.get('/network').then((response) => {
                 this.networks = response.data;
             })
+        },
+        mounted() {
+            setTimeout(() => {
+                this.canvasBlockWidth = this.$refs.canvas.offsetWidth
+            },100)
+        },
+        methods: {
+
         }
     }
 </script>
