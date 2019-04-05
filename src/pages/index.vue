@@ -21,7 +21,10 @@
                         <router-link to="/settings">
                             <div class="set-port">
                                 <img src="" alt="">
-                                <span>Настроить порт</span>
+                                <span>
+                                    <span class="mdi mdi-settings-outline"></span>
+                                    Настроить порт
+                                </span>
                             </div>
                         </router-link>
                     </div>
@@ -38,7 +41,10 @@
                         <router-link to="/settings">
                             <div class="set-port">
                                 <img src="" alt="">
-                                <span>Настроить порт</span>
+                                <span>
+                                    <span class="mdi mdi-settings-outline"></span>
+                                    Настроить порт
+                                </span>
                             </div>
                         </router-link>
                     </div>
@@ -53,7 +59,10 @@
                         <router-link to="/settings">
                             <div class="set-port">
                                 <img src="" alt="">
-                                <span>Настроить порт</span>
+                                <span>
+                                    <span class="mdi mdi-settings-outline"></span>
+                                    Настроить порт
+                                </span>
                             </div>
                         </router-link>
                     </div>
@@ -68,7 +77,10 @@
                         <router-link to="/settings">
                             <div class="set-port">
                                 <img src="" alt="">
-                                <span>Настроить порт</span>
+                                <span>
+                                    <span class="mdi mdi-settings-outline"></span>
+                                    Настроить порт
+                                </span>
                             </div>
                         </router-link>
                     </div>
@@ -86,6 +98,14 @@
                     <div>
                         <p class="info__network-name">{{ item.name }}</p>
                         <span class="info__network-ip">{{ item.ip }}</span>
+                    </div>
+                </div>
+
+                <div class="info__network">
+                    <img src="../../static/icons/light-bulb.svg" alt="" class="info__network-img">
+                    <div>
+                        <p class="info__network-name">abc</p>
+                        <span class="info__network-ip">192.16.1.11</span>
                     </div>
                 </div>
             </div>

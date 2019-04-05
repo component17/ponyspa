@@ -8,7 +8,7 @@ html, body{
     width: 100%;
 }
 
-h1, h2, h3, h4, p, span {
+h1, h2, h3, h4, p, span, input {
     font-family: 'Montserrat', sans-serif;
     padding: 0;
     margin: 0;
@@ -205,8 +205,9 @@ a {
 
 .pixel-count {
     color: #082419;
-    display: flex;
-    padding: 10px 65px;
+    width: 159px;
+    height: 40px;
+    text-align: center;
     justify-content: center;
     border-radius: 3px;
     border: solid 1px #e0e0e0;
@@ -214,9 +215,14 @@ a {
     margin-bottom: 16px;
 }
 
+input[type=number]::-webkit-inner-spin-button {
+    appearance: none;
+}
+
 .warning {
     color: #d0021b;
     margin-bottom: 40px;
+    text-align: center;
 }
 
 .pixel-settings {
@@ -229,6 +235,12 @@ a {
     width: 100%;
     box-sizing: border-box;
     justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.active, .active p, .active span {
+    background-color: #386beb;
+    color: #fff;
 }
 
 .pixel-settings p {
@@ -238,12 +250,33 @@ a {
 .pixel-settings-name {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #082419;
+}
+
+.pixel-settings-name input{
+    margin-right: 10px;
+    width: 270px;
+    height: 36px;
+    border-radius: 3px;
+    border: solid 1px #e0e0e0;
+    background-color: #ffffff;
+    padding: 9.5px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 500;
+    color: #082419;
 }
 
 .color-picker {
     display: flex;
     flex-direction: row;
     align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #082419;
 }
 
 .color-picker p {
@@ -257,11 +290,16 @@ a {
     border-radius: 3px;
     border: solid 1px #e0e0e0;
     background-color: #ffffff;
-    padding: 10px;
+    padding: 9.5px;
     box-sizing: border-box;
     font-size: 14px;
     font-weight: 500;
     color: #082419;
+}
+
+.color-picker input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    appearance: none;
 }
 
 .color-result {
@@ -270,4 +308,8 @@ a {
     border-radius: 3px;
     border: solid 1px #e0e0e0;
     background-color: #ff0d0d;
+}
+
+.mdi-delete {
+    color: #9b9b9b;
 }
