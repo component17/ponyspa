@@ -1,0 +1,60 @@
+*{
+    font-family: 'Montserrat', sans-serif;
+}
+html, body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+#app{
+    width: 100%;
+    height: 100%;
+}
+
+.content{
+    width: 100%;
+    height: 100%;
+}
+
+.header-block{
+    background-color: #0f88f2;
+    padding: 20px 60px;
+
+}
+
+.header-block > .title{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.header-block > .title > h1{
+    color: white;
+    line-height: 40px;
+    font-size: 40px;
+
+    padding-left: 15px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.body{
+    display: flex;
+    height: 100%;
+}
+
+.settings{
+    flex: 1;
+    padding: 20px;
+    border-right: grey 1px solid;
+}
+.info{
+    width: 250px;
+    padding: 20px;
+}
+
+.card{
+    width: 100%;
+    border: 1px grey solid;
+}
