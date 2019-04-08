@@ -1,8 +1,5 @@
 <template>
     <div class="hello">
-        <div v-if="isEdited">
-            <button @click="deleteBlock">Удалить</button>
-        </div>
 
         <div class="scene" v-if="width">
             <canvas ref="canvas"
@@ -34,7 +31,7 @@
                      :style="`background-color: rgb(${item.color.r}, ${item.color.g}, ${item.color.b})`"></div>
             </div>
 
-            <span class="mdi mdi-delete"></span>
+            <span class="mdi mdi-delete" @click="deleteRow(index)"></span>
         </div>
 
         <!--<div class="inputs">-->
@@ -185,6 +182,9 @@
             }
         },
         methods: {
+            deleteRow(index){
+                this.blocks.splice(index, 1);
+            },
             getStyle(item) {
                 return `
                     position: absolute;

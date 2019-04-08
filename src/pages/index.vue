@@ -15,10 +15,11 @@
 
                 <h3 class="ports-list">Список портов</h3>
 
-                <div class="card">
+                <div class="card"
+                v-for="i in 4">
                     <div class="header">
-                        <span>Порт 1</span>
-                        <router-link to="/port/0">
+                        <span>Порт {{i}}</span>
+                        <router-link :to="'/port/'+(i-1) ">
                             <div class="set-port">
                                 <img src="" alt="">
                                 <span>
@@ -31,78 +32,78 @@
                     <div class="canvas" ref="canvas">
                         <selector v-if="!isLoading"
                                   :width="canvasBlockWidth"
-                                  :cells="cells.filter(i => i.port === 0)"
+                                  :cells="cells.filter(i => i.port === i - 1)"
                                   :lamps="60"
                         ></selector>
 
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="header">
-                        <span>Порт 2</span>
-                        <router-link to="/port/1">
-                            <div class="set-port">
-                                <img src="" alt="">
-                                <span>
-                                    <span class="mdi mdi-settings-outline"></span>
-                                    Настроить порт
-                                </span>
-                            </div>
-                        </router-link>
-                    </div>
-                    <div class="canvas">
-                        <!--<selector v-if="!isLoading"-->
-                                  <!--:width.="canvasBlockWidth - 400"-->
-                                  <!--:cells="cells.filter(i => i.port === 1)"-->
-                                  <!--:lamps="60"-->
-                        <!--&gt;</selector>-->
-                    </div>
-                </div>
+                <!--<div class="card">-->
+                    <!--<div class="header">-->
+                        <!--<span>Порт 2</span>-->
+                        <!--<router-link to="/port/1">-->
+                            <!--<div class="set-port">-->
+                                <!--<img src="" alt="">-->
+                                <!--<span>-->
+                                    <!--<span class="mdi mdi-settings-outline"></span>-->
+                                    <!--Настроить порт-->
+                                <!--</span>-->
+                            <!--</div>-->
+                        <!--</router-link>-->
+                    <!--</div>-->
+                    <!--<div class="canvas">-->
+                        <!--&lt;!&ndash;<selector v-if="!isLoading"&ndash;&gt;-->
+                                  <!--&lt;!&ndash;:width.="canvasBlockWidth - 400"&ndash;&gt;-->
+                                  <!--&lt;!&ndash;:cells="cells.filter(i => i.port === 1)"&ndash;&gt;-->
+                                  <!--&lt;!&ndash;:lamps="60"&ndash;&gt;-->
+                        <!--&lt;!&ndash;&gt;</selector>&ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
 
-                <div class="card">
-                    <div class="header">
-                        <span>Порт 3</span>
-                        <router-link to="/port/2">
-                            <div class="set-port">
-                                <img src="" alt="">
-                                <span>
-                                    <span class="mdi mdi-settings-outline"></span>
-                                    Настроить порт
-                                </span>
-                            </div>
-                        </router-link>
-                    </div>
-                    <div class="canvas">
-                        <!--<selector v-if="!isLoading"-->
-                                  <!--:width="canvasBlockWidth - 400"-->
-                                  <!--:cells="cells.filter(i => i.port === 2)"-->
-                                  <!--:lamps="60"-->
-                        <!--&gt;</selector>-->
-                    </div>
-                </div>
+                <!--<div class="card">-->
+                    <!--<div class="header">-->
+                        <!--<span>Порт 3</span>-->
+                        <!--<router-link to="/port/2">-->
+                            <!--<div class="set-port">-->
+                                <!--<img src="" alt="">-->
+                                <!--<span>-->
+                                    <!--<span class="mdi mdi-settings-outline"></span>-->
+                                    <!--Настроить порт-->
+                                <!--</span>-->
+                            <!--</div>-->
+                        <!--</router-link>-->
+                    <!--</div>-->
+                    <!--<div class="canvas">-->
+                        <!--&lt;!&ndash;<selector v-if="!isLoading"&ndash;&gt;-->
+                                  <!--&lt;!&ndash;:width="canvasBlockWidth - 400"&ndash;&gt;-->
+                                  <!--&lt;!&ndash;:cells="cells.filter(i => i.port === 2)"&ndash;&gt;-->
+                                  <!--&lt;!&ndash;:lamps="60"&ndash;&gt;-->
+                        <!--&lt;!&ndash;&gt;</selector>&ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
 
-                <div class="card">
-                    <div class="header">
-                        <span>Порт 4</span>
-                        <router-link to="/port/3">
-                            <div class="set-port">
-                                <img src="" alt="">
-                                <span>
-                                    <span class="mdi mdi-settings-outline"></span>
-                                    Настроить порт
-                                </span>
-                            </div>
-                        </router-link>
-                    </div>
-                    <div class="canvas">
-                        <!--<selector v-if="!isLoading"-->
-                                  <!--:width="canvasBlockWidth - 400"-->
-                                  <!--:cells="cells.filter(i => i.port === 3)"-->
-                                  <!--:lamps="60"-->
-                        <!--&gt;</selector>-->
-                    </div>
-                </div>
+                <!--<div class="card">-->
+                    <!--<div class="header">-->
+                        <!--<span>Порт 4</span>-->
+                        <!--<router-link to="/port/3">-->
+                            <!--<div class="set-port">-->
+                                <!--<img src="" alt="">-->
+                                <!--<span>-->
+                                    <!--<span class="mdi mdi-settings-outline"></span>-->
+                                    <!--Настроить порт-->
+                                <!--</span>-->
+                            <!--</div>-->
+                        <!--</router-link>-->
+                    <!--</div>-->
+                    <!--<div class="canvas">-->
+                        <!--&lt;!&ndash;<selector v-if="!isLoading"&ndash;&gt;-->
+                                  <!--&lt;!&ndash;:width="canvasBlockWidth - 400"&ndash;&gt;-->
+                                  <!--&lt;!&ndash;:cells="cells.filter(i => i.port === 3)"&ndash;&gt;-->
+                                  <!--&lt;!&ndash;:lamps="60"&ndash;&gt;-->
+                        <!--&lt;!&ndash;&gt;</selector>&ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
             </div>
 
             <div class="info">
