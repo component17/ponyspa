@@ -13,7 +13,7 @@
         <div class="body">
             <div class="settings">
 
-                <h3>Список портов</h3>
+                <h3 class="ports-list">Список портов</h3>
 
                 <div class="card">
                     <div class="header">
@@ -107,16 +107,15 @@
             </div>
 
             <div class="info">
-                <h3>Сетевые интерфейсы:</h3>
+                <h3>Сетевые интерфейсы</h3>
 
                 <div class="info__network" v-for="(item, index) in networks">
-                    <img src="../../static/icons/light-bulb.svg" alt="" class="info__network-img">
+                    <img src="../../static/icons/ip_icon.svg" alt="" class="info__network-img">
                     <div>
                         <p class="info__network-name">{{ item.name }}</p>
                         <span class="info__network-ip">{{ item.ip }}</span>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -163,5 +162,6 @@
         display: flex;
         flex-direction: column;
         flex-grow: 2;
+        min-width: 960px;
     }
 </style>

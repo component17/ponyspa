@@ -38,6 +38,7 @@
                     </div>
                 </div>
 
+
                 <!--<div class="pixel-settings" :class="{active : isActive}">-->
                     <!--<div class="pixel-settings-name">-->
                         <!--<p>Название:</p>-->
@@ -87,6 +88,7 @@
                     <!--</div>-->
                     <!--<span class="mdi mdi-delete"></span>-->
                 <!--</div>-->
+
 
             </div>
 
