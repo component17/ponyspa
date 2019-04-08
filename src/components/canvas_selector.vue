@@ -18,7 +18,8 @@
             </div>
         </div>
 
-        <div v-if="isEdited" class="pixel-settings" v-for="(item, index) in blocks" :key="index" :class="{active : active === index}">
+        <div v-if="isEdited" class="pixel-settings" v-for="(item, index) in blocks" :key="index"
+             :class="{active : active === index}">
             <div class="pixel-settings-name">
                 <p>Название:</p>
                 <input type="text" v-model="blocks[index].name">{{ index }}
@@ -73,10 +74,14 @@
                 this.blocks = this.cells
             },
             blocks: {
-                handler(state){
+                handler(state) {
                     this.$emit('update:cells', state);
                 },
                 deep: true
+            },
+            width(state) {
+                this.canvas.width = this.width;
+                this.sceneWidth = this.width - 20;
             }
         },
         data() {
@@ -100,9 +105,9 @@
                 scene: {
                     x: 10,
                     y: 10,
-                    width: this.width - 20,
                     height: 100
                 },
+                sceneWidth: this.width - 20,
                 height: 120,
                 ctx: null,
                 colorPicker: {
@@ -176,7 +181,7 @@
         },
         computed: {
             step() {
-                return ~~this.scene.width / this.lamps
+                return ~~this.sceneWidth / this.lamps
             }
         },
         methods: {
@@ -287,7 +292,7 @@
 
             drawScene() {
                 this.ctx.strokeStyle = this.style.guideLine
-                this.ctx.strokeRect(~~this.scene.x + .5, ~~this.scene.y + .5, this.scene.width, this.scene.height)
+                this.ctx.strokeRect(~~this.scene.x + .5, ~~this.scene.y + .5, this.sceneWidth, this.scene.height)
             },
 
             drawCreate() {
@@ -382,8 +387,8 @@
                     rect.x = 0
                 }
 
-                if (rect.x + rect.width > this.scene.width) {
-                    rect.x = this.scene.width - rect.width
+                if (rect.x + rect.width > this.sceneWidth) {
+                    rect.x = this.sceneWidth - rect.width
                 }
 
                 this.ctx.fillStyle = "red"
@@ -482,7 +487,7 @@
 
             drawGuideLines() {
                 this.ctx.strokeStyle = this.style.guideLine
-                for (let x = 0; x <= this.scene.width - this.step; x += this.step) {
+                for (let x = 0; x <= this.sceneWidth - this.step; x += this.step) {
                     if (x === 0) {
                         continue
                     }
@@ -587,7 +592,6 @@
                 // console.log('eventBlockActive: ',{index: +this.active, start, end});
 
 
-
                 this.sendMessage([
                     {
                         port: ~~this.$route.params.id,
@@ -606,10 +610,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-    canvas {
-        float: left;
-    }
-
     .inputs {
         margin-top: 8px;
     }

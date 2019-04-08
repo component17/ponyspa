@@ -29,9 +29,8 @@
                         </router-link>
                     </div>
                     <div class="canvas" ref="canvas">
-
                         <selector v-if="!isLoading"
-                                  :width="canvasBlockWidth - 400"
+                                  :width="canvasBlockWidth"
                                   :cells="cells.filter(i => i.port === 0)"
                                   :lamps="60"
                         ></selector>
@@ -53,11 +52,11 @@
                         </router-link>
                     </div>
                     <div class="canvas">
-                        <selector v-if="!isLoading"
-                                  :width="canvasBlockWidth - 400"
-                                  :cells="cells.filter(i => i.port === 1)"
-                                  :lamps="60"
-                        ></selector>
+                        <!--<selector v-if="!isLoading"-->
+                                  <!--:width.="canvasBlockWidth - 400"-->
+                                  <!--:cells="cells.filter(i => i.port === 1)"-->
+                                  <!--:lamps="60"-->
+                        <!--&gt;</selector>-->
                     </div>
                 </div>
 
@@ -75,11 +74,11 @@
                         </router-link>
                     </div>
                     <div class="canvas">
-                        <selector v-if="!isLoading"
-                                  :width="canvasBlockWidth - 400"
-                                  :cells="cells.filter(i => i.port === 2)"
-                                  :lamps="60"
-                        ></selector>
+                        <!--<selector v-if="!isLoading"-->
+                                  <!--:width="canvasBlockWidth - 400"-->
+                                  <!--:cells="cells.filter(i => i.port === 2)"-->
+                                  <!--:lamps="60"-->
+                        <!--&gt;</selector>-->
                     </div>
                 </div>
 
@@ -97,11 +96,11 @@
                         </router-link>
                     </div>
                     <div class="canvas">
-                        <selector v-if="!isLoading"
-                                  :width="canvasBlockWidth - 400"
-                                  :cells="cells.filter(i => i.port === 3)"
-                                  :lamps="60"
-                        ></selector>
+                        <!--<selector v-if="!isLoading"-->
+                                  <!--:width="canvasBlockWidth - 400"-->
+                                  <!--:cells="cells.filter(i => i.port === 3)"-->
+                                  <!--:lamps="60"-->
+                        <!--&gt;</selector>-->
                     </div>
                 </div>
             </div>
@@ -150,6 +149,14 @@
                 this.cells = response.data;
                 this.isLoading = false;
             })
+        },
+        mounted(){
+            window.addEventListener("resize", () => {
+                let div = this.$refs.canvas;
+                console.log(div);
+                console.log(div.offsetWidth);
+                this.canvasBlockWidth = div.offsetWidth
+            }, false);
         },
         methods: {
 

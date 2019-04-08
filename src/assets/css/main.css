@@ -106,6 +106,10 @@ a {
     padding: 20px 50px;
 }
 
+.header-block > p{
+    margin-bottom: 20px;
+}
+
 .header-block > .title{
     display: flex;
     flex-direction: row;
@@ -120,18 +124,49 @@ a {
     flex-direction: row;
     align-content: space-between;
 }
+.button-block{
+    display: flex;
 
-.header-block > .title > .close{
+}
+
+.settings-button{
     display: flex;
     flex-direction: row;
     align-items: center;
     color: #fff;
     border-radius: 3px;
     border: solid 1px #ffffff;
-    width: 132px;
-    height: 40px;
     display: flex;
     justify-content: center;
+    font-size: 16px;
+    padding: 10px 20px;
+    font-weight: 500;
+}
+
+.save:hover {
+    background-color: #fff;
+    color: #386beb;
+}
+
+.save:hover span {
+    background-color: #fff;
+    color: #386beb;
+}
+
+.settings-button:hover {
+    background-color: #fff;
+    color: #386beb;
+}
+
+.save{
+    background-color: #386beb;
+    margin-right: 10px;
+    font-size: 14px;
+    line-height: 16px;
+}
+.save > p{
+    position: relative;
+    top: 1px;
 }
 
 .header-block > .title img{
@@ -217,13 +252,22 @@ a {
     display: flex;
     flex-direction: column;
     padding: 20px;
+    border: none;
 }
 
-.canvas > span {
+canvas {
+    margin-bottom: 20px;
+    float: left;
+    max-width: 100%;
+    height: 100%;
+}
+
+.toolTips {
     font-size: 14px;
     font-weight: 500;
     color: #9b9b9b;
     margin-top: 10px;
+    text-align: center;
 }
 
 .info{
@@ -279,6 +323,8 @@ a {
     border: solid 1px #e0e0e0;
     background-color: #ffffff;
     margin-bottom: 16px;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 input[type=number]::-webkit-inner-spin-button {
@@ -378,4 +424,9 @@ input[type=number]::-webkit-outer-spin-button {
 
 .mdi-delete {
     color: #9b9b9b;
+}
+.mdi-content-save {
+    color: #fff;
+    margin-right: 8px;
+    font-size: 16px;
 }
