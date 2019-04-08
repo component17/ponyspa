@@ -1,7 +1,6 @@
 <template>
     <div class="hello">
         <div v-if="isEdited">
-            <input type="text" placeholder="кол-во светодиодов" v-model="lamps">
             <button @click="deleteBlock">Удалить</button>
         </div>
 
@@ -18,16 +17,37 @@
                  class="toolTips">{{item.name}}
             </div>
         </div>
-        <div class="inputs">
-            <div class="items" v-for="(item, index) in blocks" :key="index">
-                <input type="text" placeholder="Цвет" v-model="blocks[index].color">
-                <input type="text" placeholder="Название ячейки" v-model="blocks[index].name">
+
+        <div v-if="isEdited" class="pixel-settings" v-for="(item, index) in blocks" :key="index" :class="{active : active === index}">
+            <div class="pixel-settings-name">
+                <p>Название:</p>
+                <input type="text" v-model="blocks[index].name">{{ index }}
             </div>
+
+            <div class="color-picker">
+                <p>RGB:</p>
+                <input type="number" v-model.number="blocks[index].color.r">
+                <input type="number" v-model.number="blocks[index].color.g">
+                <input type="number" v-model.number="blocks[index].color.b">
+                <div class="color-result"
+                     :style="`background-color: rgb(${item.color.r}, ${item.color.g}, ${item.color.b})`"></div>
+            </div>
+
+            <span class="mdi mdi-delete"></span>
         </div>
+
+        <!--<div class="inputs">-->
+        <!--<div class="items" v-for="(item, index) in blocks" :key="index">-->
+        <!--<input type="text" placeholder="Цвет" v-model="blocks[index].color">-->
+        <!--<input type="text" placeholder="Название ячейки" v-model="blocks[index].name">-->
+        <!--</div>-->
+        <!--</div>-->
     </div>
 </template>
 
 <script>
+    import _ from 'lodash'
+
     export default {
         name: 'HelloWorld',
         props: {
@@ -38,13 +58,25 @@
             width: {
                 type: Number,
                 required: true
+            },
+            lamps: {
+                type: Number
+            },
+            cells: {
+                type: Array
             }
         },
         watch: {
             lamps() {
                 this.mouseLeave();
                 this.markers = [];
-                this.blocks = []
+                this.blocks = this.cells
+            },
+            blocks: {
+                handler(state){
+                    this.$emit('update:cells', state);
+                },
+                deep: true
             }
         },
         data() {
@@ -63,7 +95,7 @@
                     guideLine: '#e0e0e0',
                     activeColor: '#4a4a4a'
                 },
-                blocks: [],
+                blocks: this.cells,
                 canvas: null,
                 scene: {
                     x: 10,
@@ -73,8 +105,11 @@
                 },
                 height: 120,
                 ctx: null,
-                lamps: 50,
-                colorPicker: '#63c9ff',
+                colorPicker: {
+                    r: 255,
+                    g: 0,
+                    b: 0,
+                },
                 cellName: 'Без имени',
                 mouse: {
                     x: 0,
@@ -145,14 +180,13 @@
             }
         },
         methods: {
-
             getStyle(item) {
                 return `
-        position: absolute;
-        left: ${this.scene.x + item.x}px;
-        top: ${this.scene.y + item.y + item.height}px;
-        width: ${item.width}px;
-        font-size: 14px;`;
+                    position: absolute;
+                    left: ${this.scene.x + item.x}px;
+                    top: ${this.scene.y + item.y + item.height}px;
+                    width: ${item.width}px;
+                    font-size: 14px;`;
             },
 
             save(index, block) {
@@ -257,7 +291,7 @@
             },
 
             drawCreate() {
-                this.ctx.fillStyle = this.colorPicker
+                this.ctx.fillStyle = `rgb(${this.colorPicker.r},${this.colorPicker.g},${this.colorPicker.b})`;
                 if ((this.mouse.dragStart || this.mouse.resizeStart) || !this.mouse.isDown || !this.isEdited) return
                 let rect = {
                     x: this.create.start * this.step,
@@ -335,30 +369,6 @@
 
             },
 
-            drawLabel(rect) {
-                if (!rect.name) return
-                this.ctx.font = this.style.label.font
-                this.ctx.textBaseline = "hanging"
-
-                let w = this.ctx.measureText(rect.name).width + this.style.label.padding.left
-
-                let d = (rect.width - w) * -1
-
-                let fill = {
-                    x: this.scene.x + rect.x - (d / 2),
-                    y: this.scene.y + rect.y + rect.height / 2 - 5,
-                    width: w,
-                    height: 20
-                }
-
-                this.ctx.fillStyle = 'white'
-                this.ctx.strokeStyle = 'black'
-                this.ctx.fillRect(~~fill.x + .5, ~~fill.y + .5, fill.width, fill.height)
-                this.ctx.strokeRect(~~fill.x + .5, ~~fill.y + .5, fill.width, fill.height)
-                this.ctx.fillStyle = 'black'
-                this.ctx.fillText(rect.name, ~~fill.x + (this.style.label.padding.left / 2) + .5, ~~fill.y + (this.style.label.padding.top / 2) + .5)
-            },
-
             dragMove() {
                 if (this.mouse.resizeStart || !this.mouse.isDown || !this.mouse.dragStart || this.active === false || !this.isEdited) return
 
@@ -395,8 +405,8 @@
 
             drawRect() {
                 for (let obj of this.blocks) {
-                    this.ctx.fillStyle = obj.color
-                    this.ctx.strokeStyle = obj.color
+                    this.ctx.fillStyle = `rgb(${obj.color.r},${obj.color.g},${obj.color.b})`;
+                    this.ctx.strokeStyle = `rgb(${obj.color.r},${obj.color.g},${obj.color.b})`;
                     this.ctx.fillRect(~~this.scene.x + obj.x + .5, ~~this.scene.y + obj.y + .5, obj.width - 1, obj.height)
 
                     // this.drawLabel(obj)
@@ -514,24 +524,82 @@
                 // console.log('eventCreateStart:', this.create.start);
             },
             eventCreateMove() {
-                if (!this.create.start || this.mouse.resizeStart) return
-                // console.log('eventCreateMove:', this.create.start, this.mouse.cell);
+                if (!this.create.start || this.mouse.resizeStart) return;
+                //console.log('eventCreateMove:', this.create.start, this.mouse.cell);
+
+                this.$emit('update:cells', this.blocks);
+
+                this.sendMessage([
+                    {
+                        port: 0,
+                        start: ~~this.$route.params.id,
+                        end: this.mouse.cell,
+                        color: this.colorPicker
+                    },
+                ])
             },
             eventMove() {
-                let start = ~~this.blocks[this.active].x / this.step
-                let end = ~~((this.blocks[this.active].x + this.blocks[this.active].width) / this.step) - 1
-                // console.log('eventMove:', start, end);
+                let start = ~~this.blocks[this.active].x / this.step;
+                let end = ~~((this.blocks[this.active].x + this.blocks[this.active].width) / this.step) - 1;
+
+                this.blocks[this.active].start = ~~start;
+                this.blocks[this.active].end = ~~end;
+
+                this.$emit('update:cells', this.blocks);
+
+
+                this.sendMessage([
+                    {
+                        port: ~~this.$route.params.id,
+                        start: ~~start,
+                        end: end,
+                        color: this.blocks[this.active].color
+                    },
+                ]);
+
+
             },
             eventResize() {
-                let start = ~~this.blocks[this.active].x / this.step
+                let start = ~~this.blocks[this.active].x / this.step;
                 let end = ~~((this.blocks[this.active].x + this.blocks[this.active].width) / this.step) - 1
-                // console.log('eventResize:', start, end);
+
+                this.blocks[this.active].start = ~~start;
+                this.blocks[this.active].end = ~~end;
+
+                this.$emit('update:cells', this.blocks);
+
+                this.sendMessage([
+                    {
+                        port: ~~this.$route.params.id,
+                        start: ~~start,
+                        end: end,
+                        color: this.blocks[this.active].color
+                    }
+                ])
+
+
             },
             eventBlockActive() {
-                let start = ~~this.blocks[this.active].x / this.step
+                this.$emit('update:cells', this.blocks);
+
+                let start = ~~this.blocks[this.active].x / this.step;
                 let end = ~~((this.blocks[this.active].x + this.blocks[this.active].width) / this.step) - 1
                 // console.log('eventBlockActive: ',{index: +this.active, start, end});
-            }
+
+
+
+                this.sendMessage([
+                    {
+                        port: ~~this.$route.params.id,
+                        start: ~~start,
+                        end: end,
+                        color: this.blocks[this.active].color
+                    },
+                ])
+            },
+            sendMessage: _.throttle(function (data) {
+                this.$axios.post('/move', data)
+            }, 150),
         }
     }
 </script>
