@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-            <div class="pixel-settings" @click="changeActive" :class="{active : isActive}">
+            <div class="pixel-settings">
                 <div class="pixel-settings-name">
                     <p>Название:</p>
                     <input type="text">
