@@ -5,12 +5,14 @@
 
             <div class="title title-settings">
                 <h1>Порт 1</h1>
-                <router-link to="/" class="close">
-                    <p>Закрыть <span class="mdi mdi-close"></span></p>
-                </router-link>
-                <button @click="saveCells">
-                    Сохранить
-                </button>
+                <div class="button-block">
+                    <button @click="saveCells" class="settings-button save">
+                        <span class="mdi mdi-content-save"></span> <p>Сохранить</p>
+                    </button>
+                    <router-link to="/" class="settings-button">
+                        <span class="mdi mdi-close"></span>
+                    </router-link>
+                </div>
             </div>
             <p>Задайте количество пикселей (светодиодов) в ленте и выберите область, под которой будет размещена
                 ячейка. Редактор позволяет изменять полодение блоков, менять их размеры, задавать цвет подстветки и
@@ -28,7 +30,7 @@
                 <p class="warning">ВНИМАНИЕ! При изменении количества пикселей в ленте все установленные
                     настройки будут удалены.</p>
 
-                <div class="card">
+                <div class="">
                     <div class="canvas" ref="canvas">
                         <selector v-if="!isLoading"
                                   :width="canvasBlockWidth - 50"
