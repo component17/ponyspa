@@ -18,7 +18,7 @@
                 <div class="card">
                     <div class="header">
                         <span>Порт 1</span>
-                        <router-link to="/settings">
+                        <router-link to="/port/0">
                             <div class="set-port">
                                 <img src="" alt="">
                                 <span>
@@ -30,7 +30,11 @@
                     </div>
                     <div class="canvas" ref="canvas">
 
-                        <selector v-if="canvasBlockWidth" :width="canvasBlockWidth"></selector>
+                        <selector v-if="!isLoading"
+                                  :width="canvasBlockWidth - 400"
+                                  :cells="cells.filter(i => i.port === 0)"
+                                  :lamps="60"
+                        ></selector>
 
                     </div>
                 </div>
@@ -38,7 +42,7 @@
                 <div class="card">
                     <div class="header">
                         <span>Порт 2</span>
-                        <router-link to="/settings">
+                        <router-link to="/port/1">
                             <div class="set-port">
                                 <img src="" alt="">
                                 <span>
@@ -49,14 +53,18 @@
                         </router-link>
                     </div>
                     <div class="canvas">
-                        <!--<selector></selector>-->
+                        <selector v-if="!isLoading"
+                                  :width="canvasBlockWidth - 400"
+                                  :cells="cells.filter(i => i.port === 1)"
+                                  :lamps="60"
+                        ></selector>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="header">
                         <span>Порт 3</span>
-                        <router-link to="/settings">
+                        <router-link to="/port/2">
                             <div class="set-port">
                                 <img src="" alt="">
                                 <span>
@@ -67,14 +75,18 @@
                         </router-link>
                     </div>
                     <div class="canvas">
-                        <!--<selector></selector>-->
+                        <selector v-if="!isLoading"
+                                  :width="canvasBlockWidth - 400"
+                                  :cells="cells.filter(i => i.port === 2)"
+                                  :lamps="60"
+                        ></selector>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="header">
                         <span>Порт 4</span>
-                        <router-link to="/settings">
+                        <router-link to="/port/3">
                             <div class="set-port">
                                 <img src="" alt="">
                                 <span>
@@ -85,7 +97,11 @@
                         </router-link>
                     </div>
                     <div class="canvas">
-                        <!--<selector></selector>-->
+                        <selector v-if="!isLoading"
+                                  :width="canvasBlockWidth - 400"
+                                  :cells="cells.filter(i => i.port === 3)"
+                                  :lamps="60"
+                        ></selector>
                     </div>
                 </div>
             </div>
@@ -98,14 +114,6 @@
                     <div>
                         <p class="info__network-name">{{ item.name }}</p>
                         <span class="info__network-ip">{{ item.ip }}</span>
-                    </div>
-                </div>
-
-                <div class="info__network">
-                    <img src="../../static/icons/ip_icon.svg" alt="" class="info__network-img">
-                    <div>
-                        <p class="info__network-name">abc</p>
-                        <span class="info__network-ip">192.16.1.11</span>
                     </div>
                 </div>
             </div>
@@ -124,18 +132,24 @@
         data(){
             return {
                 networks: [],
-                canvasBlockWidth: 0
+                canvasBlockWidth: 0,
+                cells: [],
+                isLoading: true,
+                width: 0
             }
         },
         created(){
             this.$axios.get('/network').then((response) => {
                 this.networks = response.data;
+            });
+            this.$axios.get('/cells').then((response) => {
+                this.canvasBlockWidth = this.$refs.canvas.offsetWidth;
+
+                console.log(this.canvasBlockWidth)
+
+                this.cells = response.data;
+                this.isLoading = false;
             })
-        },
-        mounted() {
-            setTimeout(() => {
-                this.canvasBlockWidth = this.$refs.canvas.offsetWidth
-            },100)
         },
         methods: {
 

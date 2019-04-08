@@ -6,7 +6,7 @@ import Settings from '@/pages/settings'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   routes: [
     {
       path: '/',
@@ -14,7 +14,7 @@ export default new Router({
       component: Index,
     },
     {
-      path: '/settings',
+      path: '/port/:id',
       name: 'Settings',
       component: Settings,
     }

@@ -8,6 +8,9 @@
                 <router-link to="/" class="close">
                     <p>Закрыть <span class="mdi mdi-close"></span></p>
                 </router-link>
+                <button @click="saveCells">
+                    Сохранить
+                </button>
             </div>
             <p>Задайте количество пикселей (светодиодов) в ленте и выберите область, под которой будет размещена
                 ячейка. Редактор позволяет изменять полодение блоков, менять их размеры, задавать цвет подстветки и
@@ -20,71 +23,76 @@
 
                 <h3>Количество пикселей (светодиодов) в ленте:</h3>
 
-                <input class="pixel-count" type="number" value="100">
+                <input class="pixel-count" type="number" v-model="lamps">
 
                 <p class="warning">ВНИМАНИЕ! При изменении количества пикселей в ленте все установленные
                     настройки будут удалены.</p>
 
                 <div class="card">
-                    <div class="canvas">
-                        Canvas
+                    <div class="canvas" ref="canvas">
+                        <selector v-if="!isLoading"
+                                  :width="canvasBlockWidth - 50"
+                                  :lamps="lamps"
+                                  :cells.sync="cells"
+                                  isEdited/>
                     </div>
                 </div>
 
-            <div class="pixel-settings">
-                <div class="pixel-settings-name">
-                    <p>Название:</p>
-                    <input type="text">
-                </div>
 
-                <div class="color-picker">
-                    <p>RGB:</p>
-                    <input type="number">
-                    <input type="number">
-                    <input type="number">
-                    <div class="color-result"></div>
-                </div>
+                <!--<div class="pixel-settings" :class="{active : isActive}">-->
+                    <!--<div class="pixel-settings-name">-->
+                        <!--<p>Название:</p>-->
+                        <!--<input type="text">-->
+                    <!--</div>-->
 
-                <span class="mdi mdi-delete"></span>
-            </div>
+                    <!--<div class="color-picker">-->
+                        <!--<p>RGB:</p>-->
+                        <!--<input type="number">-->
+                        <!--<input type="number">-->
+                        <!--<input type="number">-->
+                        <!--<div class="color-result"></div>-->
+                    <!--</div>-->
 
-            <div class="pixel-settings">
-                <div class="pixel-settings-name">
-                    <p>Название:</p>
-                    <input type="text">
-                </div>
+                    <!--<span class="mdi mdi-delete"></span>-->
+                <!--</div>-->
 
-                <div class="color-picker">
-                    <p>RGB:</p>
-                    <input type="number">
-                    <input type="number">
-                    <input type="number">
-                    <div class="color-result"></div>
-                </div>
+                <!--<div class="pixel-settings">-->
+                    <!--<div class="pixel-settings-name">-->
+                        <!--<p>Название:</p>-->
+                        <!--<input type="text">-->
+                    <!--</div>-->
 
-                <span class="mdi mdi-delete"></span>
-            </div>
+                    <!--<div class="color-picker">-->
+                        <!--<p>RGB:</p>-->
+                        <!--<input type="number">-->
+                        <!--<input type="number">-->
+                        <!--<input type="number">-->
+                        <!--<div class="color-result"></div>-->
+                    <!--</div>-->
 
-            <div class="pixel-settings">
-                <div class="pixel-settings-name">
-                    <p>Название:</p>
-                    <input type="text">
-                </div>
+                    <!--<span class="mdi mdi-delete"></span>-->
+                <!--</div>-->
 
-                <div class="color-picker">
-                    <p>RGB:</p>
-                    <input type="number">
-                    <input type="number">
-                    <input type="number">
-                    <div class="color-result"></div>
-                </div>
-                <span class="mdi mdi-delete"></span>
-            </div>
+                <!--<div class="pixel-settings">-->
+                    <!--<div class="pixel-settings-name">-->
+                        <!--<p>Название:</p>-->
+                        <!--<input type="text">-->
+                    <!--</div>-->
+
+                    <!--<div class="color-picker">-->
+                        <!--<p>RGB:</p>-->
+                        <!--<input type="number">-->
+                        <!--<input type="number">-->
+                        <!--<input type="number">-->
+                        <!--<div class="color-result"></div>-->
+                    <!--</div>-->
+                    <!--<span class="mdi mdi-delete"></span>-->
+                <!--</div>-->
+
 
             </div>
 
         </div>
-
 
 
     </div>
@@ -92,7 +100,40 @@
 
 <script>
     export default {
+        components: {
+            selector: require('../components/canvas_selector').default
+        },
+        data() {
+            return {
+                canvasBlockWidth: 0,
+                isActive: false,
+                lamps: 60,
 
+                isLoading: true,
+                cells: []
+            }
+        },
+        created(){
+            this.$axios.get('/cells-on-port/' + this.$route.params.id).then((response) => {
+                this.canvasBlockWidth = this.$refs.canvas.offsetWidth;
+
+                this.cells = response.data;
+                this.isLoading = false;
+            })
+        },
+        methods: {
+            saveCells(){
+                console.log('save cells', this.cells);
+
+                this.cells.map(i => {
+                    i.port = +this.$route.params.id
+                })
+
+                this.$axios.post('/cells-on-port/' + this.$route.params.id, this.cells).then((response) => {
+                    console.log(response.data)
+                })
+            },
+        }
     }
 </script>
 

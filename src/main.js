@@ -9,7 +9,7 @@ import('./assets/css/main.css');
 
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:3000/api';
+axios.defaults.baseURL = 'http://192.168.1.72:3000/api';
 
 Vue.prototype.$axios = axios;
 
@@ -23,6 +23,6 @@ new Vue({
     components: {App},
     template: '<App/>',
     iconfont: 'mdi'
-})
+});
 
 
