@@ -4,7 +4,7 @@
         <div class="header-block">
 
             <div class="title title-settings">
-                <h1>Порт 1</h1>
+                <h1>Порт {{+$route.params.id+1}}</h1>
                 <div class="button-block">
                     <button @click="saveCells" class="settings-button save">
                         <span class="mdi mdi-content-save"></span> <p>Сохранить</p>
