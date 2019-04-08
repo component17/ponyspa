@@ -177,6 +177,8 @@
             this.ctx = this.canvas.getContext('2d');
 
             this.start();
+            
+            console.log({step: this.step});
 
         },
         computed: {
@@ -412,9 +414,16 @@
                 for (let obj of this.blocks) {
                     this.ctx.fillStyle = `rgb(${obj.color.r},${obj.color.g},${obj.color.b})`;
                     this.ctx.strokeStyle = `rgb(${obj.color.r},${obj.color.g},${obj.color.b})`;
-                    this.ctx.fillRect(~~this.scene.x + obj.x + .5, ~~this.scene.y + obj.y + .5, obj.width - 1, obj.height)
-
-                    // this.drawLabel(obj)
+                    let rect = {
+                        start: ~~(obj.x/this.step),
+                        end: ~~((obj.x+obj.width)/this.step),
+                        x: 0,
+                        width: 0
+                    };
+                    rect.widht = (rect.end - rect.start)*this.step
+                    rect.x = ~~(this.scene.x + (rect.start*this.step))+.5
+                    
+                    this.ctx.fillRect(rect.x, ~~this.scene.y + obj.y + .5, rect.widht, obj.height)
                 }
             },
 
