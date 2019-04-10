@@ -597,7 +597,9 @@
                     max = Math.max(this.create.start, this.mouse.cell);
                 console.log('eventCreateMove:', min, max);
 
-                this.$emit('update:cells', this.blocks)
+                console.log(this.blocks)
+
+                this.$emit('update:cells', this.blocks);
 
                 this.sendMessage([
                     {
@@ -622,7 +624,7 @@
                 // this.blocks[this.active].start = ~~start
                 // this.blocks[this.active].end = ~~end
 
-                this.$emit('update:cells', this.blocks)
+                this.$emit('update:cells', this.blocks);
 
 
                 this.sendMessage([
