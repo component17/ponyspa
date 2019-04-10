@@ -17,6 +17,6 @@ export default new Router({
       path: '/port/:id',
       name: 'Settings',
       component: Settings,
-    }
+    },
   ]
 })

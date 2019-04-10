@@ -3,14 +3,12 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import '@mdi/font/css/materialdesignicons.css'
-
 import('./assets/css/main.css');
-
+import '@mdi/font/css/materialdesignicons.css'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://192.168.1.72/api';
-// axios.defaults.baseURL = '/api';
+//axios.defaults.baseURL = 'http://192.168.1.72/api';
+axios.defaults.baseURL = '/api';
 
 Vue.prototype.$axios = axios;
 
