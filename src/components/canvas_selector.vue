@@ -297,9 +297,9 @@
             createEnd() {
                 let bool = false
                 if (this.mouse.dragStart || this.mouse.resizeStart || !this.create.rect || !this.isEdited || !this.create.start) return
-                this.create.end = this.mouse.cell
+                this.create.rect.end = this.mouse.cell
 
-                if (this.create.rect.width !== 0 && !this.blocksCollision(this.create.rect)) {
+                if (!this.blocksCollision(this.create.rect)) {
                     this.create.rect.end = this.mouse.cell;
 
                     let r = this.create.rect;
@@ -312,6 +312,10 @@
 
                     this.create.rect.x = r.start*this.step;
                     this.create.rect.width = Math.abs(r.end-r.start)*this.step
+
+                    if(this.create.rect.width === 0){
+                        return bool
+                    }
 
                     this.blocks.push(this.create.rect)
 
@@ -548,13 +552,13 @@
                 this.ctx.strokeStyle = this.style.guideLine
                 for (let x = 0; x <= this.sceneWidth - this.step; x += this.step) {
                     if (x === 0) {
-                        this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
-                        this.ctx.fillText(~~x, ~~this.scene.x + x + 5.5, 55)
+                        // this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
+                        // this.ctx.fillText(~~x, ~~this.scene.x + x + 5.5, 55)
                         continue
                     }
                     this.ctx.beginPath()
-                    this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
-                    this.ctx.fillText(~~x, ~~this.scene.x + x + 2.5, 55)
+                    // this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
+                    // this.ctx.fillText(~~x, ~~this.scene.x + x + 2.5, 55)
                     this.ctx.moveTo(~~this.scene.x + x + .5, this.scene.y)
                     this.ctx.lineTo(~~this.scene.x + x + .5, this.scene.y + this.scene.height)
                     this.ctx.stroke()
