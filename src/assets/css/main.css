@@ -118,6 +118,7 @@ a {
     display: flex;
     flex-direction: row;
     align-content: space-between;
+    overflow: hidden;
 }
 .button-block{
     display: flex;
@@ -187,6 +188,7 @@ a {
     display: flex;
     height: 100%;
     width: 100%;
+    overflow: hidden;
 }
 
 .settings{
@@ -196,6 +198,7 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
 }
 
 .ports-list {
@@ -246,13 +249,13 @@ a {
     flex-direction: column;
     padding: 20px;
     border: none;
+    overflow: hidden;
+    width: 100%;
 }
 
 canvas {
     margin-bottom: 20px;
     float: left;
-    max-width: 100%;
-    height: 100%;
 }
 
 .toolTips {
