@@ -87,6 +87,7 @@
         },
         data() {
             return {
+                guideText: false,
                 style: {
                     scene: {
                         padding: 10
@@ -558,13 +559,17 @@
                 this.ctx.strokeStyle = this.style.guideLine
                 for (let x = 0; x <= this.sceneWidth - this.step; x += this.step) {
                     if (x === 0) {
-                        this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
-                        this.ctx.fillText(~~x, ~~this.scene.x + x + 5.5, 55)
+                        if(this.guideText){
+                            this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
+                            this.ctx.fillText(~~x, ~~this.scene.x + x + 5.5, 55)
+                        }
                         continue
                     }
                     this.ctx.beginPath()
-                    this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
-                    this.ctx.fillText(~~x, ~~this.scene.x + x + 2.5, 55)
+                    if(this.guideText){
+                        this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
+                        this.ctx.fillText(~~x, ~~this.scene.x + x + 2.5, 55)
+                    }
                     this.ctx.moveTo(~~this.scene.x + x + .5, this.scene.y)
                     this.ctx.lineTo(~~this.scene.x + x + .5, this.scene.y + this.scene.height)
                     this.ctx.stroke()
