@@ -87,6 +87,7 @@
         },
         data() {
             return {
+                guideText: false,
                 style: {
                     scene: {
                         padding: 10
@@ -363,9 +364,9 @@
                 this.loop()
             },
 
-            magic(d){
-                let x = this.scene.x+d.start*this.step + .5
-                let w = Math.floor(Math.abs(d.end-d.start))*this.step - 1
+            magic(d, bool = true){
+                let x = this.scene.x+d.start*this.step
+                let w = Math.round(Math.abs(d.end-d.start+bool))*this.step
 
                 d.x = x;
                 
@@ -374,12 +375,12 @@
                 return d;
             },
 
-            toScene(rect) {
+            toScene(rect, bool = true) {
                 let d = JSON.parse(JSON.stringify(rect))
                 d.x += this.scene.x
                 d.y += this.scene.y
 
-                d = this.magic(d);
+                d = this.magic(d, bool);
 
                 return d
             },
@@ -479,27 +480,27 @@
             setMarker() {
                 if (this.active === false) return
                 this.markers = []
-                let obj = this.blocks[this.active]
+                let obj = this.toScene(this.blocks[this.active])
 
                 let mk = {
                     width: 8,
                     height: 8
                 }
 
-                let x = ~~this.scene.x + (obj.start*this.step) + .5
-                let w = Math.floor(obj.end-obj.start)*this.step - 1
+                // let x = ~~this.scene.x + (obj.start*this.step) + .5
+                // let w = Math.floor(obj.end-obj.start)*this.step - 1
 
                 let m1 = {
-                    x: x - (mk.width / 2),
-                    y: this.scene.y + obj.y + (obj.height / 2) - (mk.height / 2),
+                    x: obj.x - (mk.width / 2),
+                    y: obj.y + (obj.height / 2) - (mk.height / 2),
                     width: mk.width,
                     height: mk.height,
                     position: 'left',
                     parent: this.active,
                 }
                 let m2 = {
-                    x: x + w - (mk.width / 2),
-                    y: this.scene.y + obj.y + (obj.height / 2) - (mk.height / 2),
+                    x: obj.x + obj.width - (mk.width / 2),
+                    y: obj.y + (obj.height / 2) - (mk.height / 2),
                     width: mk.width,
                     height: mk.height,
                     position: 'right',
@@ -537,9 +538,15 @@
                 let bool = false
                 for (let index in this.blocks) {
                     if (+index === +this.active) continue
-                    let rect = this.toScene(obj);
+
+                    let rect = {...this.toScene(obj)};
+
+                    if(this.mouse.vx < 0){
+                        rect.x += this.step
+                    }
+
                     rect.x -= ~~this.scene.x;
-                    if (this.isCollision(rect, this.blocks[index])) {
+                    if (this.isCollision(rect, this.toScene(this.blocks[index]))) {
                         bool = true
                         break
                     }
@@ -552,13 +559,17 @@
                 this.ctx.strokeStyle = this.style.guideLine
                 for (let x = 0; x <= this.sceneWidth - this.step; x += this.step) {
                     if (x === 0) {
-                        // this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
-                        // this.ctx.fillText(~~x, ~~this.scene.x + x + 5.5, 55)
+                        if(this.guideText){
+                            this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
+                            this.ctx.fillText(~~x, ~~this.scene.x + x + 5.5, 55)
+                        }
                         continue
                     }
                     this.ctx.beginPath()
-                    // this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
-                    // this.ctx.fillText(~~x, ~~this.scene.x + x + 2.5, 55)
+                    if(this.guideText){
+                        this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
+                        this.ctx.fillText(~~x, ~~this.scene.x + x + 2.5, 55)
+                    }
                     this.ctx.moveTo(~~this.scene.x + x + .5, this.scene.y)
                     this.ctx.lineTo(~~this.scene.x + x + .5, this.scene.y + this.scene.height)
                     this.ctx.stroke()
@@ -599,9 +610,9 @@
                 if (!this.create.start || this.mouse.resizeStart || !this.mouse.isDown) return
                 let min = Math.min(this.create.start, this.mouse.cell),
                     max = Math.max(this.create.start, this.mouse.cell);
-                console.log('eventCreateMove:', min, max);
+                // console.log('eventCreateMove:', min, max);
 
-                console.log(this.blocks)
+                // console.log(this.blocks)
 
                 this.$emit('update:cells', this.blocks);
 
@@ -619,7 +630,7 @@
                 let min = Math.min(this.create.start, this.mouse.cell),
                     max = Math.max(this.create.start, this.mouse.cell);
 
-                console.log('eventCreateEnd:', min, max);
+                // console.log('eventCreateEnd:', min, max);
             },
             eventMove() {
                 // let start = ~~this.blocks[this.active].x / this.step
