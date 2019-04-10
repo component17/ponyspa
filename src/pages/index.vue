@@ -32,7 +32,7 @@
                     <div class="canvas" ref="canvas">
                         <selector v-if="!isLoading"
                                   :width="canvasBlockWidth - 80"
-                                  :cells="cells.filter(i => i.port === i - 1)"
+                                  :cells="cells.filter(item => item.port === i - 1)"
                                   :lamps="60"
                         ></selector>
 
@@ -143,24 +143,31 @@
                 this.networks = response.data;
             });
             this.$axios.get('/cells').then((response) => {
-                if(this.$refs.canvas.length === 0) return
-                this.canvasBlockWidth = this.$refs.canvas[0].offsetWidth;
+                // if(this.$refs.canvas.length === 0) return;
+                // this.canvasBlockWidth = this.$refs.canvas[0].offsetWidth;
 
                 this.cells = response.data;
                 this.isLoading = false;
+
+                console.log(this.cells)
             })
         },
         mounted(){
+            setTimeout(() => {
+                this.getSize()
+            }, 100);
+
             window.addEventListener("resize", () => {
                 if(this.$refs.canvas.length === 0) return
-
-                let div = this.$refs.canvas[0];
-                console.log(div.offsetWidth);
-                this.canvasBlockWidth = div.offsetWidth
+                this.getSize()
             }, false);
         },
         methods: {
-
+            getSize(){
+                let div = this.$refs.canvas[0];
+                console.log(div.offsetWidth);
+                this.canvasBlockWidth = div.offsetWidth
+            }
         }
     }
 </script>
