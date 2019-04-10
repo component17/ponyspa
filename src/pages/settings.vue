@@ -7,7 +7,8 @@
                 <h1>Порт {{+$route.params.id+1}}</h1>
                 <div class="button-block">
                     <button @click="saveCells" class="settings-button save">
-                        <span class="mdi mdi-content-save"></span> <p>Сохранить</p>
+                        <span class="mdi mdi-content-save"></span>
+                        <p>Сохранить</p>
                     </button>
                     <router-link to="/" class="settings-button">
                         <span class="mdi mdi-close"></span>
@@ -30,65 +31,64 @@
                 <p class="warning">ВНИМАНИЕ! При изменении количества пикселей в ленте все установленные
                     настройки будут удалены.</p>
 
-                <div class="">
-                    <div class="canvas" ref="canvas">
-                        <selector v-if="!isLoading"
-                                  :width="canvasBlockWidth - 50"
-                                  :lamps="lamps"
-                                  :cells.sync="cells"
-                                  isEdited/>
-                    </div>
+
+                <div class="canvas" ref="canvas">
+                    <selector v-if="!isLoading"
+                              :width="canvasBlockWidth - 50"
+                              :lamps="lamps"
+                              :cells.sync="cells"
+                              isEdited/>
                 </div>
 
 
                 <!--<div class="pixel-settings" :class="{active : isActive}">-->
-                    <!--<div class="pixel-settings-name">-->
-                        <!--<p>Название:</p>-->
-                        <!--<input type="text">-->
-                    <!--</div>-->
+                <!--<div class="pixel-settings-name">-->
+                <!--<p>Название:</p>-->
+                <!--<input type="text">-->
+                <!--</div>-->
 
-                    <!--<div class="color-picker">-->
-                        <!--<p>RGB:</p>-->
-                        <!--<input type="number">-->
-                        <!--<input type="number">-->
-                        <!--<input type="number">-->
-                        <!--<div class="color-result"></div>-->
-                    <!--</div>-->
+                <!--<div class="color-picker">-->
+                <!--<p>RGB:</p>-->
+                <!--<input type="number">-->
+                <!--<input type="number">-->
+                <!--<input type="number">-->
+                <!--<div class="color-result"></div>-->
+                <!--</div>-->
 
-                    <!--<span class="mdi mdi-delete"></span>-->
+                <!--<span class="mdi mdi-delete"></span>-->
                 <!--</div>-->
 
                 <!--<div class="pixel-settings">-->
-                    <!--<div class="pixel-settings-name">-->
-                        <!--<p>Название:</p>-->
-                        <!--<input type="text">-->
-                    <!--</div>-->
+                <!--<div class="pixel-settings-name">-->
+                <!--<p>Название:</p>-->
+                <!--<input type="text">-->
+                <!--</div>-->
 
-                    <!--<div class="color-picker">-->
-                        <!--<p>RGB:</p>-->
-                        <!--<input type="number">-->
-                        <!--<input type="number">-->
-                        <!--<input type="number">-->
-                        <!--<div class="color-result"></div>-->
-                    <!--</div>-->
+                <!--<div class="color-picker">-->
+                <!--<p>RGB:</p>-->
+                <!--<input type="number">-->
+                <!--<input type="number">-->
+                <!--<input type="number">-->
+                <!--<div class="color-result"></div>-->
+                <!--</div>-->
 
-                    <!--<span class="mdi mdi-delete"></span>-->
+                <!--<span class="mdi mdi-delete"></span>-->
                 <!--</div>-->
 
                 <!--<div class="pixel-settings">-->
-                    <!--<div class="pixel-settings-name">-->
-                        <!--<p>Название:</p>-->
-                        <!--<input type="text">-->
-                    <!--</div>-->
+                <!--<div class="pixel-settings-name">-->
+                <!--<p>Название:</p>-->
+                <!--<input type="text">-->
+                <!--</div>-->
 
-                    <!--<div class="color-picker">-->
-                        <!--<p>RGB:</p>-->
-                        <!--<input type="number">-->
-                        <!--<input type="number">-->
-                        <!--<input type="number">-->
-                        <!--<div class="color-result"></div>-->
-                    <!--</div>-->
-                    <!--<span class="mdi mdi-delete"></span>-->
+                <!--<div class="color-picker">-->
+                <!--<p>RGB:</p>-->
+                <!--<input type="number">-->
+                <!--<input type="number">-->
+                <!--<input type="number">-->
+                <!--<div class="color-result"></div>-->
+                <!--</div>-->
+                <!--<span class="mdi mdi-delete"></span>-->
                 <!--</div>-->
 
 
@@ -115,17 +115,25 @@
                 cells: []
             }
         },
-        created(){
+        created() {
             this.$axios.get('/cells-on-port/' + this.$route.params.id).then((response) => {
-                this.canvasBlockWidth = this.$refs.canvas.offsetWidth;
+                this.canvasBlockWidth = this.$refs.canvas.offsetWidth
 
-                this.cells = response.data;
-                this.isLoading = false;
+                this.cells = response.data
+                this.isLoading = false
             })
         },
+        mounted() {
+            window.addEventListener("resize", () => {
+                if (!this.$refs.canvas) return
+
+                let div = this.$refs.canvas
+                this.canvasBlockWidth = div.offsetWidth
+            }, false)
+        },
         methods: {
-            saveCells(){
-                console.log('save cells', this.cells);
+            saveCells() {
+                console.log('save cells', this.cells)
 
                 this.cells.map(i => {
                     i.port = +this.$route.params.id

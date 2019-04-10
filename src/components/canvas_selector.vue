@@ -31,7 +31,7 @@
                      :style="`background-color: rgb(${item.color.r}, ${item.color.g}, ${item.color.b})`"></div>
             </div>
 
-            <span class="mdi mdi-delete" @click="deleteRow(index)"></span>
+            <span class="mdi mdi-delete" @click="deleteBlock(index)"></span>
         </div>
 
         <!--<div class="inputs">-->
@@ -66,26 +66,30 @@
         },
         watch: {
             lamps() {
-                this.mouseLeave();
-                this.markers = [];
+                this.lamps = +this.lamps
+                this.mouseLeave()
+                this.markers = []
                 this.blocks = this.cells
             },
             blocks: {
                 handler(state) {
-                    this.$emit('update:cells', state);
+                    this.$emit('update:cells', state)
                 },
                 deep: true
             },
             width(state) {
-                this.canvas.width = this.width;
-                this.sceneWidth = this.width - 20;
+                if (!this.width) return
+                this.canvas.width = this.width
+                this.sceneWidth = this.width - 20
+
+                this.setMarker();
             }
         },
         data() {
             return {
                 style: {
                     scene: {
-                        padding: 0
+                        padding: 10
                     },
                     label: {
                         font: "12px Arial",
@@ -168,14 +172,12 @@
                     }
             }())
 
-            this.canvas = this.$refs.canvas;
-            this.canvas.width = this.width;
-            this.canvas.height = this.height;
-            this.ctx = this.canvas.getContext('2d');
+            this.canvas = this.$refs.canvas
+            this.canvas.width = this.width
+            this.canvas.height = this.height
+            this.ctx = this.canvas.getContext('2d')
 
-            this.start();
-            
-            console.log({step: this.step});
+            this.start()
 
         },
         computed: {
@@ -184,47 +186,50 @@
             }
         },
         methods: {
-            deleteRow(index){
-                this.blocks.splice(index, 1);
-            },
             getStyle(item) {
                 return `
                     position: absolute;
                     left: ${this.scene.x + item.x}px;
                     top: ${this.scene.y + item.y + item.height}px;
                     width: ${item.width}px;
-                    font-size: 14px;`;
+                    font-size: 14px;`
             },
 
             save(index, block) {
-                this.$set(this.blocks, +index, block);
+                this.$set(this.blocks, +index, block)
             },
 
             loop() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.drawScene();
-                this.drawGuideLines();
-                this.drawRect();
-                this.drawActive();
-                this.drawMarkers();
-                this.drawCreate();
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+                this.drawScene()
+                this.drawGuideLines()
+                this.drawRect()
+                this.drawActive()
+                this.drawMarkers()
+                this.drawCreate()
 
                 window.requestAnimationFrame(this.loop)
             },
 
+            setMouse(e){
+                this.mouse.old = {x: this.mouse.x, y: this.mouse.y}
+                this.mouse.old.cell = this.mouse.cell
+
+                this.mouse.x = e.offsetX
+                this.mouse.y = e.offsetY
+
+                this.mouse.vx = this.mouse.x - this.mouse.old.x
+                this.mouse.vy = this.mouse.y - this.mouse.old.y
+
+                this.mouse.cell = Math.floor(this.mouse.x / this.step)
+
+                this.mouse.vc = this.mouse.cell - this.mouse.old.cell
+            },
+
             mouseMove(e) {
-                this.mouse.old = {x: this.mouse.x, y: this.mouse.y};
-                this.mouse.old.cell = this.mouse.cell;
 
-                this.mouse.x = e.offsetX;
-                this.mouse.y = e.offsetY;
 
-                this.mouse.vx = this.mouse.x - this.mouse.old.x;
-                this.mouse.vy = this.mouse.y - this.mouse.old.y;
-
-                this.mouse.cell = ~~(this.mouse.x / this.step)
-
-                this.mouse.vc = this.mouse.cell - this.mouse.old.cell;
+                this.setMouse(e)
 
                 this.resize()
                 this.dragMove()
@@ -232,8 +237,11 @@
                 this.eventCreateMove()
             },
 
-            mouseDown() {
+            mouseDown(e) {
                 this.mouse.isDown = true
+
+                this.setMouse(e);
+
                 this.resizeStart()
                 this.dragStart()
                 this.createStart()
@@ -256,9 +264,8 @@
                 this.create.end = false
             },
 
-            deleteBlock() {
-                if (this.markers.length === 0) return
-                let index = this.markers[0].parent
+            deleteBlock(index) {
+                if (index === undefined) return
                 this.blocks.splice(+index, 1)
                 this.dragStop()
                 this.markers = []
@@ -274,6 +281,16 @@
             createStart() {
                 if (this.mouse.dragStart || this.mouse.resizeStart || this.blocksCollision(this.mouse) || !this.mouse.isDown || !this.isEdited) return
                 this.create.start = this.mouse.cell
+                this.create.rect = {
+                    x: this.create.start * this.step,
+                    y: 0,
+                    start: this.mouse.cell,
+                    end: false,
+                    height: this.scene.height,
+                    color: this.colorPicker,
+                    name: this.cellName
+                };
+
                 this.eventCreateStart()
             },
 
@@ -283,11 +300,27 @@
                 this.create.end = this.mouse.cell
 
                 if (this.create.rect.width !== 0 && !this.blocksCollision(this.create.rect)) {
+                    this.create.rect.end = this.mouse.cell;
+
+                    let r = this.create.rect;
+
+                    let min = Math.min(r.start, r.end);
+                    let max = Math.max(r.start, r.end);
+
+                    r.start = min;
+                    r.end = max;
+
+                    this.create.rect.x = r.start*this.step;
+                    this.create.rect.width = Math.abs(r.end-r.start)*this.step
+
                     this.blocks.push(this.create.rect)
+
                     this.active = this.blocks.length - 1
                     bool = true
                     this.setMarker()
                 }
+
+                this.eventCreateEnd()
 
                 return bool
             },
@@ -298,16 +331,12 @@
             },
 
             drawCreate() {
-                this.ctx.fillStyle = `rgb(${this.colorPicker.r},${this.colorPicker.g},${this.colorPicker.b})`;
+                this.ctx.fillStyle = `rgb(${this.colorPicker.r},${this.colorPicker.g},${this.colorPicker.b})`
                 if ((this.mouse.dragStart || this.mouse.resizeStart) || !this.mouse.isDown || !this.isEdited) return
-                let rect = {
-                    x: this.create.start * this.step,
-                    y: 0,
-                    width: (this.step * (this.create.start - this.mouse.cell - 1)) * -1,
-                    height: this.scene.height,
-                    color: this.colorPicker,
-                    name: this.cellName
-                }
+                let rect = this.create.rect;
+
+                rect.x = rect.start * this.step;
+                rect.width = (this.step * (this.create.start - this.mouse.cell - 1)) * -1;
 
                 if (rect.width < 0) {
                     rect.x -= Math.abs(rect.width)
@@ -330,10 +359,23 @@
                 this.loop()
             },
 
+            magic(d){
+                let x = this.scene.x+d.start*this.step + .5
+                let w = Math.floor(Math.abs(d.end-d.start))*this.step - 1
+
+                d.x = x;
+                
+                d.width = w;
+
+                return d;
+            },
+
             toScene(rect) {
                 let d = JSON.parse(JSON.stringify(rect))
                 d.x += this.scene.x
                 d.y += this.scene.y
+
+                d = this.magic(d);
 
                 return d
             },
@@ -343,6 +385,7 @@
                 let bool = false
                 for (let index in this.blocks) {
                     let rect = this.toScene(this.blocks[index])
+
                     if (this.isCollision(this.mouse, rect)) {
                         this.active = index
                         this.mouse.dragStart = true
@@ -370,9 +413,9 @@
 
                 this.ctx.strokeStyle = this.style.activeColor
 
-                let rect = this.blocks[point]
+                let rect = this.toScene(this.blocks[point])
 
-                this.ctx.strokeRect(~~this.scene.x + rect.x + .5, ~~this.scene.y + rect.y + .5, rect.width - 1, rect.height - 1)
+                this.ctx.strokeRect(rect.x, rect.y, rect.width, rect.height)
 
             },
 
@@ -382,6 +425,8 @@
                 let rect = JSON.parse(JSON.stringify(this.blocks[this.active]))
 
                 let d = this.deltaX % this.step
+
+                rect = this.magic(rect);
 
                 rect.x = this.mouse.cell * this.step - this.deltaX + d
 
@@ -393,10 +438,14 @@
                     rect.x = this.sceneWidth - rect.width
                 }
 
+                let width = (rect.end-rect.start);
+                rect.start = ~~(rect.x/this.step)
+                rect.end = rect.start+width;
+
                 this.ctx.fillStyle = "red"
 
                 if (!this.blocksCollision(rect)) {
-                    this.save(this.active, rect);
+                    this.save(this.active, rect)
                     this.eventMove()
                 }
 
@@ -410,20 +459,16 @@
                 this.create.start = false
             },
 
+
             drawRect() {
                 for (let obj of this.blocks) {
-                    this.ctx.fillStyle = `rgb(${obj.color.r},${obj.color.g},${obj.color.b})`;
-                    this.ctx.strokeStyle = `rgb(${obj.color.r},${obj.color.g},${obj.color.b})`;
-                    let rect = {
-                        start: ~~(obj.x/this.step),
-                        end: ~~((obj.x+obj.width)/this.step),
-                        x: 0,
-                        width: 0
-                    };
-                    rect.widht = (rect.end - rect.start)*this.step
-                    rect.x = ~~(this.scene.x + (rect.start*this.step))+.5
-                    
-                    this.ctx.fillRect(rect.x, ~~this.scene.y + obj.y + .5, rect.widht, obj.height)
+                    this.ctx.fillStyle = `rgb(${obj.color.r},${obj.color.g},${obj.color.b})`
+                    this.ctx.strokeStyle = `rgb(${obj.color.r},${obj.color.g},${obj.color.b})`
+
+                    let rect = this.toScene(obj)
+
+                    this.ctx.fillRect(rect.x,rect.y + .5, rect.width, rect.height - 1)
+                    this.ctx.strokeRect(rect.x, rect.y + .5, rect.width, rect.height - 1)
                 }
             },
 
@@ -437,8 +482,11 @@
                     height: 8
                 }
 
+                let x = ~~this.scene.x + (obj.start*this.step) + .5
+                let w = Math.floor(obj.end-obj.start)*this.step - 1
+
                 let m1 = {
-                    x: this.scene.x + obj.x - (mk.width / 2),
+                    x: x - (mk.width / 2),
                     y: this.scene.y + obj.y + (obj.height / 2) - (mk.height / 2),
                     width: mk.width,
                     height: mk.height,
@@ -446,7 +494,7 @@
                     parent: this.active,
                 }
                 let m2 = {
-                    x: this.scene.x + obj.x + obj.width - (mk.width / 2),
+                    x: x + w - (mk.width / 2),
                     y: this.scene.y + obj.y + (obj.height / 2) - (mk.height / 2),
                     width: mk.width,
                     height: mk.height,
@@ -485,7 +533,9 @@
                 let bool = false
                 for (let index in this.blocks) {
                     if (+index === +this.active) continue
-                    if (this.isCollision(obj, this.blocks[index])) {
+                    let rect = this.toScene(obj);
+                    rect.x -= ~~this.scene.x;
+                    if (this.isCollision(rect, this.blocks[index])) {
                         bool = true
                         break
                     }
@@ -498,9 +548,13 @@
                 this.ctx.strokeStyle = this.style.guideLine
                 for (let x = 0; x <= this.sceneWidth - this.step; x += this.step) {
                     if (x === 0) {
+                        this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
+                        this.ctx.fillText(~~x, ~~this.scene.x + x + 5.5, 55)
                         continue
                     }
                     this.ctx.beginPath()
+                    this.ctx.fillText(~~(x/this.step), ~~this.scene.x + x + 5.5, 25)
+                    this.ctx.fillText(~~x, ~~this.scene.x + x + 2.5, 55)
                     this.ctx.moveTo(~~this.scene.x + x + .5, this.scene.y)
                     this.ctx.lineTo(~~this.scene.x + x + .5, this.scene.y + this.scene.height)
                     this.ctx.stroke()
@@ -527,7 +581,7 @@
                     return
                 }
 
-                this.save(this.active, rect);
+                this.save(this.active, rect)
 
                 this.eventResize()
 
@@ -538,10 +592,12 @@
                 // console.log('eventCreateStart:', this.create.start);
             },
             eventCreateMove() {
-                if (!this.create.start || this.mouse.resizeStart) return;
-                //console.log('eventCreateMove:', this.create.start, this.mouse.cell);
+                if (!this.create.start || this.mouse.resizeStart || !this.mouse.isDown) return
+                let min = Math.min(this.create.start, this.mouse.cell),
+                    max = Math.max(this.create.start, this.mouse.cell);
+                console.log('eventCreateMove:', min, max);
 
-                this.$emit('update:cells', this.blocks);
+                this.$emit('update:cells', this.blocks)
 
                 this.sendMessage([
                     {
@@ -552,35 +608,42 @@
                     },
                 ])
             },
+            eventCreateEnd(){
+                if (!this.create.start || this.mouse.resizeStart) return
+                let min = Math.min(this.create.start, this.mouse.cell),
+                    max = Math.max(this.create.start, this.mouse.cell);
+
+                console.log('eventCreateEnd:', min, max);
+            },
             eventMove() {
-                let start = ~~this.blocks[this.active].x / this.step;
-                let end = ~~((this.blocks[this.active].x + this.blocks[this.active].width) / this.step) - 1;
+                // let start = ~~this.blocks[this.active].x / this.step
+                // let end = ~~((this.blocks[this.active].x + this.blocks[this.active].width) / this.step) - 1
 
-                this.blocks[this.active].start = ~~start;
-                this.blocks[this.active].end = ~~end;
+                // this.blocks[this.active].start = ~~start
+                // this.blocks[this.active].end = ~~end
 
-                this.$emit('update:cells', this.blocks);
+                this.$emit('update:cells', this.blocks)
 
 
                 this.sendMessage([
                     {
                         port: ~~this.$route.params.id,
-                        start: ~~start,
-                        end: end,
+                        start: this.blocks[this.active].start,
+                        end: this.blocks[this.active].end,
                         color: this.blocks[this.active].color
                     },
-                ]);
+                ])
 
 
             },
             eventResize() {
-                let start = ~~this.blocks[this.active].x / this.step;
+                let start = ~~this.blocks[this.active].x / this.step
                 let end = ~~((this.blocks[this.active].x + this.blocks[this.active].width) / this.step) - 1
 
-                this.blocks[this.active].start = ~~start;
-                this.blocks[this.active].end = ~~end;
+                this.blocks[this.active].start = ~~start
+                this.blocks[this.active].end = ~~end
 
-                this.$emit('update:cells', this.blocks);
+                this.$emit('update:cells', this.blocks)
 
                 this.sendMessage([
                     {
@@ -594,12 +657,11 @@
 
             },
             eventBlockActive() {
-                this.$emit('update:cells', this.blocks);
+                this.$emit('update:cells', this.blocks)
 
-                let start = ~~this.blocks[this.active].x / this.step;
+                let start = ~~this.blocks[this.active].x / this.step
                 let end = ~~((this.blocks[this.active].x + this.blocks[this.active].width) / this.step) - 1
                 // console.log('eventBlockActive: ',{index: +this.active, start, end});
-
 
                 this.sendMessage([
                     {
@@ -626,5 +688,7 @@
     .scene {
         position: relative;
         display: inline-block;
+        overflow: hidden;
     }
+
 </style>

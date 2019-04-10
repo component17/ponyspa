@@ -31,7 +31,7 @@
                     </div>
                     <div class="canvas" ref="canvas">
                         <selector v-if="!isLoading"
-                                  :width="canvasBlockWidth"
+                                  :width="canvasBlockWidth - 80"
                                   :cells="cells.filter(i => i.port === i - 1)"
                                   :lamps="60"
                         ></selector>
@@ -143,9 +143,8 @@
                 this.networks = response.data;
             });
             this.$axios.get('/cells').then((response) => {
-                this.canvasBlockWidth = this.$refs.canvas.offsetWidth;
-
-                console.log(this.canvasBlockWidth)
+                if(this.$refs.canvas.length === 0) return
+                this.canvasBlockWidth = this.$refs.canvas[0].offsetWidth;
 
                 this.cells = response.data;
                 this.isLoading = false;
@@ -153,8 +152,9 @@
         },
         mounted(){
             window.addEventListener("resize", () => {
-                let div = this.$refs.canvas;
-                console.log(div);
+                if(this.$refs.canvas.length === 0) return
+
+                let div = this.$refs.canvas[0];
                 console.log(div.offsetWidth);
                 this.canvasBlockWidth = div.offsetWidth
             }, false);
