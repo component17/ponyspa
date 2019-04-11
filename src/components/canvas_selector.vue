@@ -24,11 +24,17 @@
 
             <div class="color-picker">
                 <p>RGB:</p>
-                <input type="number" v-model.number="blocks[index].color.r">
-                <input type="number" v-model.number="blocks[index].color.g">
-                <input type="number" v-model.number="blocks[index].color.b">
+                <input v-model.number="blocks[index].color.r">
+                <input v-model.number="blocks[index].color.g">
+                <input v-model.number="blocks[index].color.b">
                 <div class="color-result"
                      :style="`background-color: rgb(${item.color.r}, ${item.color.g}, ${item.color.b})`"></div>
+
+                <select v-model="blocks[index].sensor">
+                    <option :value="null">Отсутствует</option>
+                    <option :value="14">Сенсор 14</option>
+                    <option :value="15">Сенсор 15</option>
+                </select>
             </div>
 
             <span class="mdi mdi-delete" @click="deleteBlock(index)"></span>
@@ -87,6 +93,7 @@
         },
         data() {
             return {
+                select: null,
                 guideText: false,
                 style: {
                     scene: {
