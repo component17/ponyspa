@@ -143,9 +143,6 @@
                 this.networks = response.data;
             });
             this.$axios.get('/cells').then((response) => {
-                // if(this.$refs.canvas.length === 0) return;
-                // this.canvasBlockWidth = this.$refs.canvas[0].offsetWidth;
-
                 this.cells = response.data;
                 this.isLoading = false;
 
@@ -165,7 +162,6 @@
         methods: {
             getSize(){
                 let div = this.$refs.canvas[0];
-                console.log(div.offsetWidth);
                 this.canvasBlockWidth = div.offsetWidth
             }
         }

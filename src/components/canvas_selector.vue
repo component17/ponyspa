@@ -197,7 +197,7 @@
             getStyle(item) {
                 return `
                     position: absolute;
-                    left: ${this.scene.x + item.x}px;
+                    left: ${this.scene.x + item.start*this.step}px;
                     top: ${this.scene.y + item.y + item.height}px;
                     width: ${item.width}px;
                     font-size: 14px;`
