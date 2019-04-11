@@ -296,7 +296,8 @@
                     end: false,
                     height: this.scene.height,
                     color: this.colorPicker,
-                    name: this.cellName
+                    name: this.cellName,
+                    sensor: null
                 };
 
                 this.eventCreateStart()
