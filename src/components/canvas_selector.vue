@@ -68,6 +68,9 @@
             },
             cells: {
                 type: Array
+            },
+            index: {
+                type: Number
             }
         },
         watch: {
@@ -627,7 +630,7 @@
                 this.sendMessage([
                     {
                         port: 0,
-                        start: ~~this.$route.params.id,
+                        start: ~~this.index,
                         end: this.mouse.cell,
                         color: this.colorPicker
                     },
@@ -652,7 +655,7 @@
 
                 this.sendMessage([
                     {
-                        port: ~~this.$route.params.id,
+                        port: ~~this.index,
                         start: this.blocks[this.active].start,
                         end: this.blocks[this.active].end,
                         color: this.blocks[this.active].color
@@ -672,7 +675,7 @@
 
                 this.sendMessage([
                     {
-                        port: ~~this.$route.params.id,
+                        port: ~~this.index,
                         start: ~~start,
                         end: end,
                         color: this.blocks[this.active].color
@@ -690,7 +693,7 @@
 
                 this.sendMessage([
                     {
-                        port: ~~this.$route.params.id,
+                        port: ~~this.index,
                         start: ~~start,
                         end: end,
                         color: this.blocks[this.active].color

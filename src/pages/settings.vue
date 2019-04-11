@@ -37,6 +37,7 @@
                               :width="canvasBlockWidth - 50"
                               :lamps="lamps"
                               :cells.sync="cells"
+                              :index="+$route.params.id"
                               isEdited/>
                 </div>
 

@@ -33,6 +33,7 @@
                         <selector v-if="!isLoading"
                                   :width="canvasBlockWidth - 80"
                                   :cells="cells.filter(item => item.port === i - 1)"
+                                  :index="+i - 1"
                                   :lamps="60"
                         ></selector>
 
