@@ -30,7 +30,7 @@
                 <div class="color-result"
                      :style="`background-color: rgb(${item.color.r}, ${item.color.g}, ${item.color.b})`"></div>
 
-                <select v-model="blocks[index].sensor">
+                <select v-model="blocks[index].sensor" class="color-picker__select">
                     <option :value="null">Отсутствует</option>
                     <option :value="14">Сенсор 14</option>
                     <option :value="15">Сенсор 15</option>
@@ -377,7 +377,7 @@
                 let w = Math.round(Math.abs(d.end-d.start+bool))*this.step
 
                 d.x = x;
-                
+
                 d.width = w;
 
                 return d;
