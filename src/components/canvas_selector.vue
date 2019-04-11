@@ -199,7 +199,7 @@
                     position: absolute;
                     left: ${this.scene.x + item.start*this.step}px;
                     top: ${this.scene.y + item.y + item.height}px;
-                    width: ${item.width}px;
+                    width: ${(item.end - item.start + 1) * this.step + 1}px;
                     font-size: 14px;`
             },
 
